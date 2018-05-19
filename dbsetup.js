@@ -1,14 +1,14 @@
 // Script clear and setups up inital database structure and state,
 // such as dummy users and an active game.
 
-    
+
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
 MongoClient.connect(url, async function(err, db) {
     if (err) throw err;
     var dbo = db.db("tidifydb");
-    
+
     // USERS
     {
         // Define demo dummy data
@@ -16,12 +16,12 @@ MongoClient.connect(url, async function(err, db) {
             {
                 "name": "Test User 1",
                 "username": "user1",
-                "email": "test1@example.com", 
+                "email": "test1@example.com",
             },
             {
                 "name": "Test User 2",
                 "username": "user2",
-                "email": "test2@example.com", 
+                "email": "test2@example.com",
             },
         ];
 
@@ -41,7 +41,7 @@ MongoClient.connect(url, async function(err, db) {
                     users[0]["_id"],
                     users[1]["_id"],
                 ],
-                
+                "group_name" : "El Casa Diablos",
                 "activities": [
                     {
                         //"_id": ##,
@@ -67,7 +67,7 @@ MongoClient.connect(url, async function(err, db) {
                         "imageurl": "/taskimages/:vacuum"
                     }
                 ],
-                
+
                 "achievements": [
                     {
                         //"_id": #,
@@ -88,11 +88,11 @@ MongoClient.connect(url, async function(err, db) {
                 ]
             }
         ];
-        
+
         await dbo.collection("games").insert(demodata_games, function(err, result) {
             console.log('Dummy Game data inserted');
         });
     }
-    
+
     await db.close();
 });
