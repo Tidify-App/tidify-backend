@@ -30,7 +30,35 @@ var app = express()
 app.use(function(req, res, next) {
     req.db = db;
     req.wss = wss;
-    next();
+
+    // identify session
+    var sessionid = req.query.sessionid;
+
+    // Hardcoded sessions for DEMO
+    switch(sessionid) {
+        case "1":
+            req.current_user = {
+                "name": "Test User 1",
+            };
+            break;
+        case "2":
+            req.current_user = {
+                "name": "Test User 2",
+            };
+            break;
+        default: 
+            req.current_user = undefined;
+            break;
+    }
+    
+    // Get current Game
+    db.collection("games").findOne({}, function(err, result) {
+        if (err) throw err;
+        //console.log(result);
+        req.current_game = result;
+        next();
+    })
+
 });
 
 // Start mounting endpoints
@@ -44,6 +72,14 @@ app.use('/scoreboard', ep_scoreboard);
 
 app.get('/helloworld', (req, res) => {
     res.send({msg: "Hello World!"})
+} )
+
+app.get('/listgames', (req, res) => {
+    db.collection("games").find({}).toArray(function(err, result) {
+        if (err) throw err;
+        //console.log(result);
+        res.send(result);
+    })
 } )
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
