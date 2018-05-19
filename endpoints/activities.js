@@ -58,6 +58,21 @@ router.post('/', (req, res) => {
         function(err, result) {
             if (err) throw err;
             console.log("Added new activity to game!")
+
+            // We have a new activity! 
+            // Broadcast this to clients over websocket.
+            {
+                var ws_new_activity_notice = {
+                    "event": "new_activity",
+                    "data": {
+                        "user": req.current_user,
+                        "task_codename": req.body.activity.task.codename,
+                        "points": req.body.activity.task.points
+                    }
+                }
+                req.wss.broadcast(JSON.stringify(ws_new_activity_notice));
+            }
+
             res.send({success: true});
     });
 
