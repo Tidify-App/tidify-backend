@@ -37,7 +37,7 @@ MongoClient.connect(url, async function(err, db) {
 
         demodata_games = [
             {
-                "users_ids": [
+                "user_ids": [
                     users[0]["_id"],
                     users[1]["_id"],
                 ],
@@ -47,6 +47,7 @@ MongoClient.connect(url, async function(err, db) {
                         //"_id": ##,
                         "name": "Dishes",
                         "codename": "dishes",
+                        "user_id": users[0]["_id"],
                         "points": 10,
                         "imageurl": "/taskimages/:dishes"
                     },
@@ -54,12 +55,14 @@ MongoClient.connect(url, async function(err, db) {
                         //"_id": ##,
                         "name": "Vacuuming",
                         "codename": "vacuum",
+                        "user_id": users[0]["_id"],
                         "points": 15,
                         "imageurl": "/taskimages/:vacuum"
                         },{
                         //"_id": ##,
                         "name": "Vacuuming",
                         "codename": "vacuum",
+                        "user_id": users[1]["_id"],
                         "points": 15,
                         "imageurl": "/taskimages/:vacuum"
                     }
