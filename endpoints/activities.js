@@ -7,15 +7,17 @@ var ObjectId = require('mongodb').ObjectID;
 module.exports = router
 
 // GET /
-// Returns array of all users
+// Lists all activities for the current game
 router.get('/', (req, res) => {
-    res.send("test");
-    //var db = req.db;
-    //var collection = db.collection('game');
-    //var query = {};
-    //collection.find(query).toArray(function(err, result) {
-    //    if (err) throw err;
-    //    res.send(result);
-    //});
+    
+    // We have the current game from the session,
+    // it is stored in req.current_game
+    
+    if (!req.current_game) {
+        res.send("no game associated to sessionid.");
+    }
+
+    var activities = req.current_game["activities"];
+    res.json({"activities": activities});
 })
 
