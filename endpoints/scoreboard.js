@@ -32,7 +32,7 @@ app.get("/", function(req, res) {
   //Look up users in database
   var db = req.db;
 
-  db.collection("users").find({}).toArray(function(err, result) {
+  db.collection("users").find({}).toArray(function(err, result_users) {
     if (err) throw err;
     var scoreboard = {};
 
@@ -40,10 +40,10 @@ app.get("/", function(req, res) {
     var users = [];
     var user_ids_and_names = [];
 
-    for(var user_index in result) {
+    for(var user_index in result_users) {
       var current_user = {};
 
-      var user_data = result[user_index];
+      var user_data = result_users[user_index];
       current_user.name = user_data.name;
       current_user.username = user_data.username;
       current_user.current_score = points_per_user[user_data._id];
@@ -56,26 +56,40 @@ app.get("/", function(req, res) {
     scoreboard.users = users;
     scoreboard.latest_achievements = [];
 
-    for(var i in achievements) {
+    for(var achievement_index in achievements) {
       var achievement = {}
 
-      achievement.title = achievements[i].title;
-      var user_id = achievements[i].user_id;
+      achievement.title = achievements[achievement_index].title;
+      var user_id = achievements[achievement_index].user_id;
 
       var name;
-      var string = "";
       for(var user_index in user_ids_and_names) {
         var user_id_2 = user_ids_and_names[user_index]._id;
         var name_2 = user_ids_and_names[user_index].name;
 
-        if(user_id === user_id_2) {
+        if(user_id.toString() === user_id_2.toString()) {
           name = name_2;
           break;
         }
       }
 
-      res.send(name);
+      achievement.message = name + " has achieved " + achievement.title;
 
+      for(user_index in result_users) {
+        var user_id_2 = result_users[user_index]._id;
+
+        if(user_id.toString() === user_id_2.toString()) {
+          achievement.user = result_users[user_index];
+          break;
+        }
+      }
+
+      achievement.timestamp = achievements[achievement_index].timestamp;
+      achievement.image = achievements[achievement_index].image;
+
+      scoreboard.latest_achievements[achievement_index] = achievement;
     }
+
+    res.send(scoreboard);
   });
 });
