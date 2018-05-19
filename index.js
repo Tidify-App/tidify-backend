@@ -46,8 +46,8 @@ app.use(function(req, res, next) {
     db.collection("games").findOne({}, function(err, result) {
         if (err) throw err;
         req.current_game = result;
-    
-        // Get current user 
+
+        // Get current user
         db.collection("users").find({}).toArray( function(err, result) {
             if (err) throw err;
             var sessionid = req.query.sessionid;
@@ -58,7 +58,7 @@ app.use(function(req, res, next) {
                 case "2":
                     req.current_user = result[1];
                     break;
-                default: 
+                default:
                     req.current_user = undefined;
                     break;
             }
@@ -73,9 +73,11 @@ app.use(function(req, res, next) {
 
 var ep_activities = require('./endpoints/activities');
 var ep_scoreboard = require('./endpoints/scoreboard');
+var ep_achievements = require('./endpoints/achievements');
 
 app.use('/activities', ep_activities);
 app.use('/scoreboard', ep_scoreboard);
+app.use('/achievements', ep_achievements);
 
 app.get('/helloworld', (req, res) => {
     res.send({msg: "Hello World!"})

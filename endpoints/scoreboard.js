@@ -38,10 +38,10 @@ app.get("/", function(req, res) {
 
     scoreboard.group_name = group_name;
     var users = [];
+    var user_ids_and_names = [];
 
     for(var user_index in result) {
-      var current_user = users[user_index];
-      current_user = {};
+      var current_user = {};
 
       var user_data = result[user_index];
       current_user.name = user_data.name;
@@ -50,11 +50,32 @@ app.get("/", function(req, res) {
       current_user.image = "http://test.com/testimg.jpg"
 
       users[user_index] = current_user;
+      user_ids_and_names[user_index] = {"_id": user_data._id, "name": current_user.name};
     }
 
     scoreboard.users = users;
     scoreboard.latest_achievements = [];
 
-    res.send(scoreboard);
+    for(var i in achievements) {
+      var achievement = {}
+
+      achievement.title = achievements[i].title;
+      var user_id = achievements[i].user_id;
+
+      var name;
+      var string = "";
+      for(var user_index in user_ids_and_names) {
+        var user_id_2 = user_ids_and_names[user_index]._id;
+        var name_2 = user_ids_and_names[user_index].name;
+
+        if(user_id === user_id_2) {
+          name = name_2;
+          break;
+        }
+      }
+
+      res.send(name);
+
+    }
   });
 });
