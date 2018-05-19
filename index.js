@@ -61,13 +61,14 @@ app.use(function(req, res, next) {
 
 });
 
-
-
 // Start mounting endpoints
 //
 
 var ep_activities = require('./endpoints/activities');
+var ep_scoreboard = require('./endpoints/scoreboard');
+
 app.use('/activities', ep_activities);
+app.use('/scoreboard', ep_scoreboard);
 
 app.get('/helloworld', (req, res) => {
     res.send({msg: "Hello World!"})
